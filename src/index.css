@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+    background: #fff;
+    /* background: #3567DF; */
+    margin: 0px;
+    overflow: hidden;
+    /* Add a background image from src folder */
+}

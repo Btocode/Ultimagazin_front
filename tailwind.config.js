@@ -11,7 +11,7 @@ module.exports = {
         body: ["Open Sans"],
       },
       colors: {
-        primary: "#034F75",
+        primary: "#111A3A",
         secondary: "#D3E7F0",
         light: "#ffffff",
         dark: "#000000",
@@ -19,8 +19,9 @@ module.exports = {
       screens: {
         sm: { min: "350px", max: "600px" },
         md: { min: "601px", max: "820px" },
-        lg: { min: "821px", max: "1249px" },
-        xl: { min: "1250px" },
+        lg: { min: "821px", max: "1000px" },
+        xl: { min: "1001px", max: "1250px" },
+        "2xl":{ min: "1251px", max: "1500px" },
       },
     },
   },
