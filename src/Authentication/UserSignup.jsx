@@ -4,35 +4,41 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { AiOutlineMail } from "react-icons/ai";
 import { SiNamecheap } from "react-icons/si";
 import { RxLockOpen2 } from "react-icons/rx";
-import { AxiosApi } from "../api/AxiosApi"
+import AxiosApi from "../api/AxiosApi";
 
 
 const UserSignup = ({ next }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const handleUserSignup = (e) => {
     e.preventDefault();
-
+    setIsLoading(true);
     const options = {
       method: 'POST',
-      url: '/accounts/api/v1/signup/',
+      url: '/user/api/v1/register/',
       headers: { 'Content-Type': 'application/json' },
-      data: { email: email, password: password }
+      data: { email: email, password: password, full_name: name }
     };
 
+    console.log(options);
     AxiosApi.request(options).then(function (response) {
-      console.log(response.data);
-      if (response.data.id) {
+      console.log("hello");
+      if (response.status === 201) {
         // key value pair
         localStorage.setItem('id', JSON.stringify(response.data?.id));
-        console.log(response.data?.id)
-        next(4)
+        setIsLoading(false);
+        next(3)
       }
     }).catch(function (error) {
-      console.error(error);
+      console.log("error");
+      console.log(error);
+      setError('Email Already exists');
+      setIsLoading(false);
     });
   }
 
@@ -117,6 +123,10 @@ const UserSignup = ({ next }) => {
                 </span>
               </div>
             </div>
+            
+          </div>
+          <div className="text-red-500 text-sm font-sans text-left mt-2">
+            {error}
           </div>
           <div className="flex justify-center items-center gap-5">
             <button
@@ -131,6 +141,7 @@ const UserSignup = ({ next }) => {
             <input
               type="submit"
               className="bg-primary text-white font-sans font-semibold text-lg rounded-lg h-[45px] mt-8 w-[300px] cursor-pointer"
+              value={isLoading ? "Loading..." : "Sign Up"}
             />
           </div>
           <span>

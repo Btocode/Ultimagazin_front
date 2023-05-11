@@ -7,6 +7,7 @@ import ForgotpasswordOTP from "./ForgotpasswordOTP";
 // import OrgSignup from "./OrgSignup";
 import Signup from "./Signup";
 import UserSignup from "./UserSignup";
+import SignUpSuccess from "./SignUpSuccess"
 
 const Index = () => {
   const [formLocation, setFormLocation] = useState(0);
@@ -18,6 +19,7 @@ const Index = () => {
     <Login next={next} />,
     <UserSignup next={next} />,
     <Forgotpassword next={next} />,
+    <SignUpSuccess next={next} />,
     // <ForgotpasswordOTP next={next}/>,
     // <Newpassword next={next}/>
   ];
@@ -45,7 +47,7 @@ const Index = () => {
             formLocation <= 4 || formLocation > 5
               ? "h-[560px] w-[700px]"
               : "xl:h-[800px] xl:w-[850px] lg:h-[850px] lg:w-[800px] sm:h-[30vh] sm:w-[600px]"
-          } sm:w-full flex flex-col items-center`}>
+          } sm:w-full flex flex-col items-center justify-center`}>
           {/* Login Form */}
           {display[formLocation]}
         </div>

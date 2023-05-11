@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { AiOutlineMail } from 'react-icons/ai'
 import { SlLock } from 'react-icons/sl'
-import { AxiosApi } from "../api/AxiosApi"
+import AxiosApi from "../api/AxiosApi"
 
 
 const Forgotpassword = ({ next }) => {

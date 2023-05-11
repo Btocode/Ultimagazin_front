@@ -1,18 +1,21 @@
-import { AxiosApi } from "../api/AxiosApi"
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { RxLockOpen2 } from "react-icons/rx";
-import { toast } from 'react-toastify';
+import AxiosApi from "../api/AxiosApi";
+import { toast } from "react-toastify";
+import { useNavigation } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
+
 
 const Login = ({ next }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [show, setShow] = React.useState(false);
   const [type, setType] = useState("password");
-
 
   const changeType = () => {
     setShow(!show);
@@ -24,41 +27,47 @@ const Login = ({ next }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    setIsLoading(true);
     const options = {
-      method: 'POST',
-      url: '/accounts/api/v1/login/',
-      headers: { 'Content-Type': 'application/json' },
-      data: { email: email, password: password }
+      method: "POST",
+      url: "/user/api/v1/login/",
+      headers: { "Content-Type": "application/json" },
+      data: { email: email, password: password },
     };
 
-    AxiosApi.request(options).then(function (response) {
-      console.log(response.data);
-      if (response.data?.access) {
-        // key value pair
-        localStorage.setItem('id', JSON.stringify(response.data?.access));
-        console.log(response.data?.access)
-        console.log(response.data?.is_employee)
-        if (response.data?.is_employee === true) {
-          next(2)
-        } else {
-          next(5)
+    // console.log(options);
+    AxiosApi.request(options)
+      .then(function (response) {
+        if (response.data?.access) {
+          setIsLoading(false);
+          // key value pair
+          localStorage.setItem("access", JSON.stringify(response.data?.access).replace(/['"]+/g, ''));
+          localStorage.setItem("refresh", JSON.stringify(response.data?.refresh).replace(/['"]+/g, ''));
+          localStorage.setItem("id", JSON.stringify(response.data?.user_info?.id).replace(/['"]+/g, ''));
+          localStorage.setItem("email", JSON.stringify(response.data?.user_info?.email).replace(/['"]+/g, ''));
+          localStorage.setItem("full_name", JSON.stringify(response.data?.user_info?.full_name).replace(/['"]+/g, ''));
+          localStorage.setItem("authenticated", true);
+          localStorage.setItem("is_admin", JSON.stringify(response.data?.user_info?.is_admin).replace(/['"]+/g, ''));
+
+          // reload the page
+          window.location.reload();
+
+          console.log(response.data?.access);
+          toast.error("Login Success")
         }
-
-      }
-    }).catch(function (error) {
-      
-      console.error(error);
-      alert("Invalid Credentials")
-    });
-
+      })
+      .catch(function (error) {
+        console.log(error);
+        setIsLoading(false);
+        setError("Invalid Credentials");
+      });
   };
 
   // handle forgot password
   const handleForgotpassword = (e) => {
     e.preventDefault();
-    next(2)
-  }
-
+    next(2);
+  };
 
   return (
     <section className="w-4/6">
@@ -73,7 +82,9 @@ const Login = ({ next }) => {
               <AiOutlineMail className="text-2xl text-primary" />
             </div>
             <div className="input flex flex-1  flex-col p-2 shadow border rounded-md">
-              <label htmlFor="" className="">
+              <label
+                htmlFor=""
+                className="">
                 {" "}
                 Email{" "}
               </label>
@@ -92,7 +103,9 @@ const Login = ({ next }) => {
               <RxLockOpen2 className="text-2xl text-primary" />
             </div>
             <div className="input flex flex-1  flex-col p-2 shadow border rounded-md">
-              <label htmlFor="" className="">
+              <label
+                htmlFor=""
+                className="">
                 {" "}
                 Password{" "}
               </label>
@@ -107,8 +120,7 @@ const Login = ({ next }) => {
                 />
                 <span
                   className="absolute right-5 top-1/2 transform -translate-y-1/2 cursor-pointer"
-                  onClick={() => changeType()}
-                >
+                  onClick={() => changeType()}>
                   {show ? (
                     <BsEye className="text-primary" />
                   ) : (
@@ -119,22 +131,34 @@ const Login = ({ next }) => {
             </div>
           </div>
           <div className="forget w-full h-[20px] flex justify-end p-2 mb-4">
-            <button onClick={handleForgotpassword} className="font-sans text-md text-primary cursor-pointer">
+            <button
+              onClick={handleForgotpassword}
+              className="font-sans text-md text-primary cursor-pointer">
               Forget Password?
             </button>
           </div>
+          <p>
+            <span className="text-red-500">{error}</span>
+          </p>
           <button
             type="submit"
-            className="bg-primary text-white font-sans font-semibold text-lg rounded-xl h-[50px] w-full mt-8 cursor-pointer"
-          >
+            className="bg-primary text-white font-sans font-semibold text-lg rounded-xl h-[50px] w-full mt-8 cursor-pointer">
             Log In
+            {
+              isLoading && (
+                <span className="ml-2">
+                  <CircularProgress size={20} />
+                </span>
+              )
+            }
           </button>
           <span>
             <p className="text-left ml-2 text-md font-sans text-primary mt-4">
               Don't have an account?{" "}
-              <span onClick={() => {
-                next(1)
-              }}
+              <span
+                onClick={() => {
+                  next(1);
+                }}
                 className="text-primary font-semibold text-md cursor-pointer">
                 Sign Up
               </span>

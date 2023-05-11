@@ -1,7 +1,7 @@
 import { AiFillHome } from 'react-icons/ai'
 import { TiDocumentText } from 'react-icons/ti'
 import { MdOutlineSwitchAccount, MdManageAccounts, MdAccountBalanceWallet, MdEngineering } from 'react-icons/md'
-import { IoIosPeople, IoMdNotifications, IoMdSettings } from 'react-icons/io'
+import { IoIosPeople, IoMdNotifications, IoMdPerson, IoMdSettings } from 'react-icons/io'
 import { RxDashboard } from 'react-icons/rx'
 import { RiBarChartGroupedFill } from 'react-icons/ri'
 import { VscGraphLine } from 'react-icons/vsc'
@@ -16,31 +16,37 @@ const menuItem = [
         id: 1,
         title: 'Dashboard',
         icon: <AiFillHome />,
-        route: '/'
+        route: '/',
+        enable: true
     },
     {
         id: 2,
         title: 'Reflinks',
         icon: <TiDocumentText />,
-        route: '/reflinks'
+        route: '/reflinks',
+        enable: true
     },
     {
         id: 3,
         title: 'Leads',
         icon: <MdOutlineSwitchAccount />,
-        route: '/leads'
+        route: '/leads',
+        enable: true
+
     },
     {
         id: 4,
-        title: 'Notification',
-        icon: <IoMdNotifications />,
-        route: '/notification',
+        title: 'Networkers',
+        icon: <IoIosPeople />,
+        route: '/networkers',
+        enable: localStorage.getItem("is_admin") === "true" ? true : false
     },
     {
         id: 5,
         title: 'Settings',
         icon: <IoMdSettings />,
-        route: '/settings'
+        route: '/settings',
+        enable: true
     },
 ];
 

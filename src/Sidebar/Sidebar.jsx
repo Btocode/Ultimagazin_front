@@ -3,10 +3,17 @@ import MenuItem from "../pages/MenuItem";
 import { FiLogOut } from "react-icons/fi";
 import Logo from "../assets/images/logo1.png";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { IoIosPeople } from "react-icons/io";
 
 const Sidebar = ({  isToggleCollapse, isOpenNavbar, width }) => {
-
-
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.removeItem("authenticated");
+    navigate("/");
+    window.location.reload();
+  }
+  
   return (
     <div
       className={`bg-primary h-[95vh] p-2  flex justify-between flex-col rounded-2xl `}
@@ -35,7 +42,9 @@ const Sidebar = ({  isToggleCollapse, isOpenNavbar, width }) => {
         </Link>
 
         <div className="flex flex-col space-y-3  mt-10">
-          {menuItem.map((item) => (
+          {menuItem.filter((item) => item.enable === true).
+          map((item) => (
+            
             <MenuItem
               isToggleCollapse={isToggleCollapse}
               key={item.id}
@@ -50,11 +59,12 @@ const Sidebar = ({  isToggleCollapse, isOpenNavbar, width }) => {
       {/* Sign out button */}
       <div
     className={` w-full sm:w-[40px] mx-auto h-[50px] flex items-center cursor-pointer rounded text-white hover:bg-white hover:text-black overflow-hidden gap-4 `}
+    onClick={handleLogOut}
     >
         <span className={`w-[50px] ${isToggleCollapse ? ' mx-auto' : ''}  h-full text-2xl flex items-center justify-center`}>
           <FiLogOut />
         </span>
-        <span className={`${isToggleCollapse ? 'opacity-0 hidden': 'opacity-100'} text-md font-medium capitalize md:hidden sm:hidden`}>Logout</span>
+        <span className={`${isToggleCollapse ? 'opacity-0 hidden': 'opacity-100'} text-md font-medium capitalize md:hidden sm:hidden`}  >Logout</span>
       </div>
 
     </div>

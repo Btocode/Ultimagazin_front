@@ -23,7 +23,7 @@ const Layout = ({ width, children }) => {
       width={width} 
       />
 
-      <div className="bg-secondary flex-1 sm:p-2 h-screen overflow-y-scroll pb-10 md:pb-20 sm:pb-20">
+      <div className=" flex-1 sm:p-2 h-screen overflow-y-scroll pb-10 md:pb-20 sm:pb-20">
         <BaseHeader 
         setIsToggleCollapse={setIsToggleCollapse} 
         isToggleCollapse={isToggleCollapse}

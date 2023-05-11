@@ -1,7 +1,7 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
 import OtpInput from 'react-input-otp';
-import { AxiosApi } from "../api/AxiosApi"
+import AxiosApi from "../api/AxiosApi";
 
 
 const ForgotpasswordOTP = ({ next }) => {
