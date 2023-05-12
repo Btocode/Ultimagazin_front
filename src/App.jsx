@@ -1,34 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { ToastContainer } from "react-toastify";
+import Index from "./Authentication/Index";
+import { Route, Routes } from "react-router-dom";
+import Layout from "../src/Layout/Layout";
+import Dashboard from "../src/pages/Dashboard";
+import Reflinks from "./pages/Reflinks";
+import Leads from "./pages/Leads";
+import { useEffect, useState } from "react";
+
+
 import './App.css'
+import Networkers from "./pages/Networkers";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+  const auth = localStorage.getItem("authenticated");
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
 
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
-    <div>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <>
+    {auth ? (
+      <Layout width={width}>
+        <ToastContainer />
+
+        {/* Route to another page */}
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/reflinks" element={<Reflinks />} />
+          <Route path="/leads" element={<Leads />} />
+          <Route path="/networkers" element={<Networkers />} />
+          
+        </Routes>
+      </Layout>
+    ) : (
+      <Routes>
+        <Route path="/" element={<Index />} />
+      </Routes>
+    )}
+    <ToastContainer />
+  </>
   )
 }
 
