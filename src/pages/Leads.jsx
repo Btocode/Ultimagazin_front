@@ -3,6 +3,7 @@ import TableHead from "../UI/TableHead";
 import TableData from "../UI/TableData";
 import { getLeads } from "../api/apis";
 import { useState, useEffect } from "react";
+import { Button } from "@mui/material";
 
 const Leads = () => {
 
@@ -76,7 +77,9 @@ const Leads = () => {
               <TableData className="text-left px-2 py-3 ">{item.reflink}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.created_at}</TableData>
               <TableData className="text-left px-2 py-3 ">
-                <button>Delete</button>
+                <Button 
+                variant="outlined"
+                >Delete</Button>
               </TableData>
             </tr>
           ))} 

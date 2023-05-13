@@ -6,6 +6,9 @@ import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
 import TableData from "../UI/TableData";
 import TableHead from "../UI/TableHead";
 import { getLeads, getreflinks } from "../api/apis";
+import AxiosApi from "../api/AxiosApi";
+import LeadDeleteModal from "../Shared/LeadDeleteModal";
+import { Button } from "@mui/material";
 
 const Dashboard = () => {
   const [reflinks, setreflinks] = useState([]);
@@ -14,6 +17,8 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
 
   useEffect(() => {
     getreflinks().then((data) => {
@@ -28,6 +33,13 @@ const Dashboard = () => {
     setModalInfo(item);
     setShowModal(true);
   };
+
+  const deleteModalHandler = (id) => {
+    setDeleteId(id);
+    setDeleteModal(true);
+  };
+
+
 
   return (
     <main className="flex xl:flex-col md:flex-col lg:flex-col sm:flex-col ">
@@ -64,7 +76,10 @@ const Dashboard = () => {
                   {item.created_at.split("T")[0]}
                 </TableData>
                 <TableData className="text-left px-2 py-3">
-                  <button onClick={() => showModalHandler(item)}>View</button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                   onClick={() => showModalHandler(item)}>View</Button>
                 </TableData>
               </tr>
             ))}
@@ -114,7 +129,10 @@ const Dashboard = () => {
                   {item.created_at.split("T")[0]}
                 </TableData>
                 <TableData className="text-left px-2 py-3 ">
-                  <button>Delete</button>
+                  <Button
+                    variant="outlined"
+                  onClick={() => deleteModalHandler(item?.id)}
+                  >Delete</Button>
                 </TableData>
               </tr>
             ))}
@@ -134,6 +152,12 @@ const Dashboard = () => {
           modalInfo={modalInfo}
         />
       )}
+      {
+        deleteModal && (
+          <LeadDeleteModal setDeleteModal={setDeleteModal} id = {deleteId} />
+        )
+
+      }
     </main>
   );
 };

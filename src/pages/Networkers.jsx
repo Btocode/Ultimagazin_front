@@ -4,9 +4,15 @@ import TableData from "../UI/TableData"
 import { getAllWorkers, removeNetworker } from "../api/apis";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Button } from "@mui/material";
+import NetworkerModal from "../Shared/NetworkerModal";
 
 const Networkers = () => {
     const [networkers, setnetworkers] = useState([]);
+    const [showModal, setShowModal] = React.useState(false);
+    const [error, setError] = useState("");
+    const [selectedNetworker, setSelectedNetworker] = useState({});
+
 
     useEffect(() => {
         getAllWorkers().then((data) => {
@@ -14,19 +20,12 @@ const Networkers = () => {
         });
     }, []);
 
-    const handleRemove = (id) => {
-        // Show a confirmation message before deleting a networker
-        const confirm = window.confirm("Are you sure you want to delete this networker?");
-        if (confirm) {
-            removeNetworker(id).then((data) => {
-                if (data === "204") {
-                    getAllWorkers().then((data) => {
-                        setnetworkers(data);
-                    });
-                }
-            });
-        }
-    };
+    const networkerHandler = (item) => {
+      setSelectedNetworker(item);
+      setShowModal(true);
+  };
+
+
 
   return (
     <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
@@ -84,9 +83,13 @@ const Networkers = () => {
               <TableData className="text-left px-2 py-3 lowercase">{item?.email}</TableData>
               <TableData className="text-left px-2 py-3">{item?.is_active === true ? "Active" : "Inactive"}</TableData>
               <TableData className="text-left px-2 py-3 ">{item?.date_joined.split("T")[0]}</TableData>
-              <TableData className="text-left px-2 py-3 ">
-                <button onClick={()=> handleRemove(item?.id)}
-                >Delete</button>
+              <TableData className="text-left ">
+                <Button
+                    variant="outlined"
+                  onClick={() => networkerHandler(item)}
+                  >
+                    Action
+                  </Button>
               </TableData>
             </tr>
           ))} 
@@ -124,6 +127,11 @@ const Networkers = () => {
               </button>
             </div>
         </section>
+        {
+            showModal && (
+              <NetworkerModal info = {selectedNetworker} setShowModal = {setShowModal} setnetworkers = {setnetworkers} />
+            )
+        }
         </main>
   )
 }

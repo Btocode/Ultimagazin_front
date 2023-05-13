@@ -6,6 +6,7 @@ import { getreflinks } from "../api/apis";
 import React from "react";
 import CreateReflinkModal from "../Shared/CreateReflinkModal";
 import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
+import { Button } from "@mui/material";
 
 const Reflinks = () => {
 
@@ -80,7 +81,9 @@ const Reflinks = () => {
               <TableData className="text-left px-2 py-3 ">{item.leads}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.created_at.split("T")[0]}</TableData>
               <TableData className="text-left px-2 py-3">
-              <button onClick={() => showModalHandler(item)}>View</button>
+              <Button
+                  variant="outlined"
+               onClick={() => showModalHandler(item)}>View</Button>
               </TableData>
             </tr>
            
