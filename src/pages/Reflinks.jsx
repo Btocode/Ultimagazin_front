@@ -33,6 +33,13 @@ const Reflinks = () => {
     };
   return (
     <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
+    {loading ? (
+        <section className="w-[95%] h-[80vh]">
+        <Skeleton />
+        </section>
+        )
+        :
+        (
     <section className="w-[95%] h-[80vh]">
     
 
@@ -123,6 +130,8 @@ const Reflinks = () => {
         </div>
 
     </section>
+        )}
+
       {showCreateModal && <CreateReflinkModal setCreateModal={setCreateModal} />}
       {showModal && (
         <ReflinkInfoModal

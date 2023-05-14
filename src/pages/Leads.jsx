@@ -3,7 +3,7 @@ import TableHead from "../UI/TableHead";
 import TableData from "../UI/TableData";
 import { getLeads } from "../api/apis";
 import { useState, useEffect } from "react";
-import { Button } from "@mui/material";
+import { Button, Skeleton } from "@mui/material";
 
 const Leads = () => {
 
@@ -23,6 +23,13 @@ const Leads = () => {
 
     return (
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
+        {loading ? (
+        <section className="w-[95%] h-[80vh]">
+        <Skeleton />
+        </section>
+        )
+        :
+        (
         <section className="w-[95%] h-[80vh]">
         
     
@@ -104,6 +111,8 @@ const Leads = () => {
               </button>
             </div>
         </section>
+        )
+        }
         </main>
       );
 }
