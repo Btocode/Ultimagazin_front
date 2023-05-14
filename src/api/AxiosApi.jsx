@@ -38,7 +38,7 @@ class TokenService {
         this.accessToken = null;
         this.refreshToken = null;
         localStorage.removeItem("authenticated")
-        window.location.reload();
+        // window.location.reload();
         throw new Error("Failed to refresh token");
       }
       this.accessToken = response?.data?.access;
@@ -50,8 +50,8 @@ class TokenService {
       this.setAccessToken(null);
       this.setRefreshToken(null);
       localStorage.removeItem("authenticated");
-      alert("Session expired. Please login again.")
-      window.location.reload();
+      // alert("Session expired. Please login again.")
+      // window.location.reload();
       console.log("Failed to refresh access token:", error);
       throw error;
     }

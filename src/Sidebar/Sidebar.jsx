@@ -10,9 +10,8 @@ const Sidebar = ({  isToggleCollapse, isOpenNavbar, width }) => {
   const navigate = useNavigate();
 
   const handleLogOut = () => {
-    localStorage.removeItem("authenticated");
-    navigate("/");
-    window.location.reload();
+    localStorage.clear()
+    navigate("/login");
   }
 
   

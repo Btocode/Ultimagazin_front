@@ -10,10 +10,10 @@ import { useEffect, useState } from "react";
 
 import './App.css'
 import Networkers from "./pages/Networkers";
+import PrivateRoutes from "./utils/PrivateRoutes";
 
 const App = () => {
   const [width, setWidth] = useState(window.innerWidth);
-  const auth = localStorage.getItem("authenticated");
   useEffect(() => {
     function handleResize() {
       setWidth(window.innerWidth);
@@ -23,26 +23,23 @@ const App = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   return (
     <>
-    {auth ? (
-      <Layout width={width}>
         <ToastContainer />
 
         {/* Route to another page */}
         <Routes>
+        <Route element={<PrivateRoutes width={width} />} >
           <Route path="/" element={<Dashboard />} />
           <Route path="/reflinks" element={<Reflinks />} />
           <Route path="/leads" element={<Leads />} />
           <Route path="/networkers" element={<Networkers />} />
-          
+        </Route>
+        <Route path="/login" element={<Index />} />
+
         </Routes>
-      </Layout>
-    ) : (
-      <Routes>
-        <Route path="/*" element={<Index />} />
-      </Routes>
-    )}
+
     <ToastContainer />
   </>
   )

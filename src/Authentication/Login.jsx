@@ -4,8 +4,8 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { RxLockOpen2 } from "react-icons/rx";
 import AxiosApi from "../api/AxiosApi";
 import { toast } from "react-toastify";
-import { useNavigation } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = ({ next }) => {
@@ -13,6 +13,7 @@ const Login = ({ next }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [show, setShow] = React.useState(false);
   const [type, setType] = useState("password");
@@ -26,6 +27,7 @@ const Login = ({ next }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    localStorage.clear();
 
     setIsLoading(true);
     const options = {
@@ -49,11 +51,8 @@ const Login = ({ next }) => {
           localStorage.setItem("authenticated", true);
           localStorage.setItem("is_admin", JSON.stringify(response.data?.user_info?.is_admin).replace(/['"]+/g, ''));
 
-          // reload the page
-          window.location.reload();
 
-          console.log(response.data?.access);
-          toast.error("Login Success")
+          navigate("/")
         }
       })
       .catch(function (error) {

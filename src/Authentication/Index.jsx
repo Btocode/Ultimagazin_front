@@ -2,9 +2,7 @@ import { useState } from "react";
 import Login from "./Login";
 import Forgotpassword from "./Forgotpassword";
 import ForgotpasswordOTP from "./ForgotpasswordOTP";
-// import Multipart from "./Multipart";
 // import Newpassword from "./Newpassword";
-// import OrgSignup from "./OrgSignup";
 import Signup from "./Signup";
 import UserSignup from "./UserSignup";
 import SignUpSuccess from "./SignUpSuccess"
