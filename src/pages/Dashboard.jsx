@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Skeleton } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import LeadDeleteModal from "../Shared/LeadDeleteModal";
 import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
@@ -11,17 +11,18 @@ const Dashboard = () => {
   const [leads, setleads] = useState([]);
   const [showModal, setShowModal] = React.useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading1, setLoading1] = useState(false);
+  const [loading2, setLoading2] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState("");
   const [paginationUrl, setPaginationUrl] = useState("");
 
   useEffect(() => {
-    getreflinks(setLoading, paginationUrl).then((data) => {
+    getreflinks(setLoading1, paginationUrl).then((data) => {
       setreflinks(data);
     });
-    getLeads(setLoading, paginationUrl).then((data) => {
+    getLeads(setLoading2, paginationUrl).then((data) => {
       setleads(data);
     });
   }, []);
@@ -41,6 +42,13 @@ const Dashboard = () => {
       {/*  Dashboard Heading section  */}
 
       {/* Reflinks Section */}
+      {loading1 ? (
+        <section className="w-full 2xl:w-1/2 h-[60vh] p-4 m-4 overflow-auto">
+        <Skeleton />
+        </section>
+        )
+        :
+        (
       <section className="w-full 2xl:w-1/2 h-[60vh] p-4 m-4 overflow-auto">
         <h1 className="text-lg font-bold">Active Reflinks</h1>
         <table className="w-full text-left">
@@ -93,7 +101,17 @@ const Dashboard = () => {
           </tbody>
         </table>
       </section>
+        )
+      }
+
       {/* Leads Section */}
+      {loading2 ? (
+        <section className="w-full 2xl:w-1/2 h-[60vh] p-4 m-4 overflow-auto">
+        <Skeleton />
+        </section>
+        )
+        :
+        (
       <section className="w-full 2xl:w-1/2 h-[60vh] p-4 m-4 overflow-x-auto">
         {/* Table title  */}
         <h1 className="text-lg font-bold">Recent Leads</h1>
@@ -149,6 +167,10 @@ const Dashboard = () => {
           </tbody>
         </table>
       </section>
+        )
+      }
+
+
       {showModal && (
         <ReflinkInfoModal
           setShowModal={setShowModal}

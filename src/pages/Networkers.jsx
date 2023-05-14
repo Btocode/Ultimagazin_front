@@ -4,7 +4,7 @@ import TableData from "../UI/TableData"
 import { getAllWorkers, removeNetworker } from "../api/apis";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Button } from "@mui/material";
+import { Button, Skeleton } from "@mui/material";
 import NetworkerModal from "../Shared/NetworkerModal";
 
 const Networkers = () => {
@@ -33,6 +33,14 @@ const Networkers = () => {
 
   return (
     <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
+        {loading ? (
+        <section className="w-[95%] h-[80vh]">
+        <Skeleton />
+        </section>
+        )
+        :
+        (
+        
         <section className="w-[95%] h-[80vh]">
         
     
@@ -116,6 +124,9 @@ const Networkers = () => {
               </button>
             </div>
         </section>
+        )
+        }
+
         {
             showModal && (
               <NetworkerModal info = {selectedNetworker} setShowModal = {setShowModal} setnetworkers = {setnetworkers} />
