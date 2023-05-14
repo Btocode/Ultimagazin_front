@@ -16,7 +16,6 @@ const getLeads = async (setLoading, paginationUrl) => {
     }
   } catch (error) {
     setLoading(false);
-    console.log(error);
   }
 
   return null;
@@ -34,7 +33,7 @@ const getLeadsByReflink = async (id) => {
       return response.data;
     }
   } catch (error) {
-    console.log(error);
+    
   }
 
   return null;

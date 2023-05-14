@@ -1,12 +1,10 @@
+import { CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { RxLockOpen2 } from "react-icons/rx";
-import AxiosApi from "../api/AxiosApi";
-import { toast } from "react-toastify";
-import { CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
+import AxiosApi from "../api/AxiosApi";
 
 const Login = ({ next }) => {
   const [email, setEmail] = useState("");
@@ -43,16 +41,42 @@ const Login = ({ next }) => {
         if (response.data?.access) {
           setIsLoading(false);
           // key value pair
-          localStorage.setItem("access", JSON.stringify(response.data?.access).replace(/['"]+/g, ''));
-          localStorage.setItem("refresh", JSON.stringify(response.data?.refresh).replace(/['"]+/g, ''));
-          localStorage.setItem("id", JSON.stringify(response.data?.user_info?.id).replace(/['"]+/g, ''));
-          localStorage.setItem("email", JSON.stringify(response.data?.user_info?.email).replace(/['"]+/g, ''));
-          localStorage.setItem("full_name", JSON.stringify(response.data?.user_info?.full_name).replace(/['"]+/g, ''));
+          localStorage.setItem(
+            "access",
+            JSON.stringify(response.data?.access).replace(/['"]+/g, "")
+          );
+          localStorage.setItem(
+            "refresh",
+            JSON.stringify(response.data?.refresh).replace(/['"]+/g, "")
+          );
+          localStorage.setItem(
+            "id",
+            JSON.stringify(response.data?.user_info?.id).replace(/['"]+/g, "")
+          );
+          localStorage.setItem(
+            "email",
+            JSON.stringify(response.data?.user_info?.email).replace(
+              /['"]+/g,
+              ""
+            )
+          );
+          localStorage.setItem(
+            "full_name",
+            JSON.stringify(response.data?.user_info?.full_name).replace(
+              /['"]+/g,
+              ""
+            )
+          );
           localStorage.setItem("authenticated", true);
-          localStorage.setItem("is_admin", JSON.stringify(response.data?.user_info?.is_admin).replace(/['"]+/g, ''));
+          localStorage.setItem(
+            "is_admin",
+            JSON.stringify(response.data?.user_info?.is_admin).replace(
+              /['"]+/g,
+              ""
+            )
+          );
 
-
-          navigate("/")
+          window.location.replace("/");
         }
       })
       .catch(function (error) {
@@ -143,13 +167,11 @@ const Login = ({ next }) => {
             type="submit"
             className="bg-primary text-white font-sans font-semibold text-lg rounded-xl h-[50px] w-full mt-8 cursor-pointer">
             Log In
-            {
-              isLoading && (
-                <span className="ml-2">
-                  <CircularProgress size={20} />
-                </span>
-              )
-            }
+            {isLoading && (
+              <span className="ml-2">
+                <CircularProgress size={20} />
+              </span>
+            )}
           </button>
           <span>
             <p className="text-left ml-2 text-md font-sans text-primary mt-4">
