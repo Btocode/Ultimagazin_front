@@ -8,11 +8,13 @@ import { IoIosPeople } from "react-icons/io";
 
 const Sidebar = ({  isToggleCollapse, isOpenNavbar, width }) => {
   const navigate = useNavigate();
+
   const handleLogOut = () => {
     localStorage.removeItem("authenticated");
     navigate("/");
     window.location.reload();
   }
+
   
   return (
     <div

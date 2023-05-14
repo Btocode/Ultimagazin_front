@@ -1,7 +1,6 @@
-// import { dashboardHeading } from "@/data/data";
-// import AttendenceList from "@/subpages/AttendenceList";
-// import AllDepartment from "./Department/AllDepartment";
+import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import LeadDeleteModal from "../Shared/LeadDeleteModal";
 import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
 import TableData from "../UI/TableData";
 import TableHead from "../UI/TableHead";
@@ -14,12 +13,15 @@ const Dashboard = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState("");
+  const [paginationUrl, setPaginationUrl] = useState("");
 
   useEffect(() => {
-    getreflinks().then((data) => {
+    getreflinks(setLoading, paginationUrl).then((data) => {
       setreflinks(data);
     });
-    getLeads().then((data) => {
+    getLeads(setLoading, paginationUrl).then((data) => {
       setleads(data);
     });
   }, []);
@@ -27,6 +29,11 @@ const Dashboard = () => {
   const showModalHandler = (item) => {
     setModalInfo(item);
     setShowModal(true);
+  };
+
+  const deleteModalHandler = (id) => {
+    setDeleteId(id);
+    setDeleteModal(true);
   };
 
   return (
@@ -46,6 +53,7 @@ const Dashboard = () => {
               <TableHead className={""}>Action</TableHead>
             </tr>
           </thead>
+
           <tbody>
             {reflinks?.results?.slice(0, 6).map((item, index) => (
               <tr
@@ -64,13 +72,20 @@ const Dashboard = () => {
                   {item.created_at.split("T")[0]}
                 </TableData>
                 <TableData className="text-left px-2 py-3">
-                  <button onClick={() => showModalHandler(item)}>View</button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => showModalHandler(item)}>
+                    View
+                  </Button>
                 </TableData>
               </tr>
             ))}
             {reflinks?.results?.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-4">
+                <td
+                  colSpan="5"
+                  className="text-center py-4">
                   No Data Found
                 </td>
               </tr>
@@ -114,13 +129,19 @@ const Dashboard = () => {
                   {item.created_at.split("T")[0]}
                 </TableData>
                 <TableData className="text-left px-2 py-3 ">
-                  <button>Delete</button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => deleteModalHandler(item?.id)}>
+                    Delete
+                  </Button>
                 </TableData>
               </tr>
             ))}
             {leads?.results?.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-4">
+                <td
+                  colSpan="5"
+                  className="text-center py-4">
                   No Data Found
                 </td>
               </tr>
@@ -132,6 +153,12 @@ const Dashboard = () => {
         <ReflinkInfoModal
           setShowModal={setShowModal}
           modalInfo={modalInfo}
+        />
+      )}
+      {deleteModal && (
+        <LeadDeleteModal
+          setDeleteModal={setDeleteModal}
+          id={deleteId}
         />
       )}
     </main>

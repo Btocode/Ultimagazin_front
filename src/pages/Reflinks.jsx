@@ -6,6 +6,7 @@ import { getreflinks } from "../api/apis";
 import React from "react";
 import CreateReflinkModal from "../Shared/CreateReflinkModal";
 import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
+import { Button, Skeleton } from "@mui/material";
 
 const Reflinks = () => {
 
@@ -18,18 +19,18 @@ const Reflinks = () => {
     const [showCreateModal, setCreateModal] = React.useState(false);
     const [showModal, setShowModal] = React.useState(false);
     const [modalInfo, setModalInfo] = useState({});
+    const [paginationUrl ,setPaginationUrl] = useState("");
 
 
     useEffect(() => {
-      getreflinks().then((data) => {
+      getreflinks(setLoading, paginationUrl).then((data) => {
         setreflinks(data);
       });
-    }, []);
+    }, [paginationUrl]);
     const showModalHandler = (item) => {
       setModalInfo(item);
       setShowModal(true);
     };
-
   return (
     <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
     <section className="w-[95%] h-[80vh]">
@@ -80,7 +81,9 @@ const Reflinks = () => {
               <TableData className="text-left px-2 py-3 ">{item.leads}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.created_at.split("T")[0]}</TableData>
               <TableData className="text-left px-2 py-3">
-              <button onClick={() => showModalHandler(item)}>View</button>
+              <Button
+                  variant="outlined"
+               onClick={() => showModalHandler(item)}>View</Button>
               </TableData>
             </tr>
            
@@ -96,23 +99,23 @@ const Reflinks = () => {
       </table>
       <div className="flex justify-center items-center gap-x-4 mt-4">
           <button
-        //   disabled={categoryTripsQuery?.data?.data?.previous === null && true}
-            // onClick={() =>
-            //   setPaginationUrl(
-            //     "?" + categoryTripsQuery?.data?.data?.previous?.split("?")[1]
-            //   )
-            // }
+          disabled={reflinks?.previous === null && true}
+            onClick={() =>
+              setPaginationUrl(
+                "?" + reflinks?.previous?.split("?")[1]
+              )
+            }
             className=" outline-none border border-gray-600 rounded-lg py-1 px-4 "
           >
             Prev
           </button>
           <button
-            // disabled={categoryTripsQuery?.data?.data?.next === null && true}
-            // onClick={() =>
-            //   setPaginationUrl(
-            //     "?" + categoryTripsQuery?.data?.data?.next?.split("?")[1]
-            //   )
-            // }
+            disabled={reflinks?.next === null && true}
+            onClick={() =>
+              setPaginationUrl(
+                "?" + reflinks?.next?.split("?")[1]
+              )
+            }
             className={`outline-none border border-gray-600 rounded-lg py-1 px-4`}
           >
             Next
@@ -127,6 +130,11 @@ const Reflinks = () => {
           modalInfo={modalInfo}
         />
       )}
+      {/* {
+        loading && (
+          <Skeleton variant="rectangular" width="100%" height="100%" />
+        )
+      } */}
     </main>
   );
 };

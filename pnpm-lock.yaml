@@ -13,7 +13,9 @@ specifiers:
   autoprefixer: ^10.4.14
   axios: ^1.3.4
   classnames: ^2.3.2
+  dayjs: ^1.11.7
   dotenv-webpack: ^8.0.1
+  jwt-decode: ^3.1.2
   postcss: ^8.4.21
   react: ^18.2.0
   react-calendar: ^4.0.0
@@ -37,7 +39,9 @@ dependencies:
   '@tanstack/react-query': 4.29.1_biqbaboplfbrettd7655fr4n2y
   axios: 1.3.5
   classnames: 2.3.2
+  dayjs: 1.11.7
   dotenv-webpack: 8.0.1
+  jwt-decode: 3.1.2
   react: 18.2.0
   react-calendar: 4.2.1_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
@@ -1229,6 +1233,10 @@ packages:
   /csstype/3.1.2:
     resolution: {integrity: sha512-I7K1Uu0MBPzaFKg4nI5Q7Vs2t+3gWWW648spaF+Rg7pI9ds18Ugn+lvg4SHczUdKlHI5LWBXyqfS8+DufyBsgQ==}
 
+  /dayjs/1.11.7:
+    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+    dev: false
+
   /debug/4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
     engines: {node: '>=6.0'}
@@ -1540,6 +1548,10 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
     dev: true
+
+  /jwt-decode/3.1.2:
+    resolution: {integrity: sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==}
+    dev: false
 
   /libphonenumber-js/1.10.26:
     resolution: {integrity: sha512-oB3l4J5gEhMV+ymmlIjWedsbCpsNRqbEZ/E/MpN2QVyinKNra6DcuXywxSk/72M3DZDoH/6kzurOq1erznBMwQ==}
