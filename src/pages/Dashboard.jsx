@@ -1,14 +1,10 @@
-// import { dashboardHeading } from "@/data/data";
-// import AttendenceList from "@/subpages/AttendenceList";
-// import AllDepartment from "./Department/AllDepartment";
+import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import LeadDeleteModal from "../Shared/LeadDeleteModal";
 import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
 import TableData from "../UI/TableData";
 import TableHead from "../UI/TableHead";
 import { getLeads, getreflinks } from "../api/apis";
-import AxiosApi from "../api/AxiosApi";
-import LeadDeleteModal from "../Shared/LeadDeleteModal";
-import { Button } from "@mui/material";
 
 const Dashboard = () => {
   const [reflinks, setreflinks] = useState([]);
@@ -19,12 +15,13 @@ const Dashboard = () => {
   const [modalInfo, setModalInfo] = useState({});
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState("");
+  const [paginationUrl, setPaginationUrl] = useState("");
 
   useEffect(() => {
-    getreflinks().then((data) => {
+    getreflinks(setLoading, paginationUrl).then((data) => {
       setreflinks(data);
     });
-    getLeads().then((data) => {
+    getLeads(setLoading, paginationUrl).then((data) => {
       setleads(data);
     });
   }, []);
@@ -38,8 +35,6 @@ const Dashboard = () => {
     setDeleteId(id);
     setDeleteModal(true);
   };
-
-
 
   return (
     <main className="flex xl:flex-col md:flex-col lg:flex-col sm:flex-col ">
@@ -58,6 +53,7 @@ const Dashboard = () => {
               <TableHead className={""}>Action</TableHead>
             </tr>
           </thead>
+
           <tbody>
             {reflinks?.results?.slice(0, 6).map((item, index) => (
               <tr
@@ -79,13 +75,17 @@ const Dashboard = () => {
                   <Button
                     variant="outlined"
                     color="primary"
-                   onClick={() => showModalHandler(item)}>View</Button>
+                    onClick={() => showModalHandler(item)}>
+                    View
+                  </Button>
                 </TableData>
               </tr>
             ))}
             {reflinks?.results?.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-4">
+                <td
+                  colSpan="5"
+                  className="text-center py-4">
                   No Data Found
                 </td>
               </tr>
@@ -131,14 +131,17 @@ const Dashboard = () => {
                 <TableData className="text-left px-2 py-3 ">
                   <Button
                     variant="outlined"
-                  onClick={() => deleteModalHandler(item?.id)}
-                  >Delete</Button>
+                    onClick={() => deleteModalHandler(item?.id)}>
+                    Delete
+                  </Button>
                 </TableData>
               </tr>
             ))}
             {leads?.results?.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-4">
+                <td
+                  colSpan="5"
+                  className="text-center py-4">
                   No Data Found
                 </td>
               </tr>
@@ -152,12 +155,12 @@ const Dashboard = () => {
           modalInfo={modalInfo}
         />
       )}
-      {
-        deleteModal && (
-          <LeadDeleteModal setDeleteModal={setDeleteModal} id = {deleteId} />
-        )
-
-      }
+      {deleteModal && (
+        <LeadDeleteModal
+          setDeleteModal={setDeleteModal}
+          id={deleteId}
+        />
+      )}
     </main>
   );
 };

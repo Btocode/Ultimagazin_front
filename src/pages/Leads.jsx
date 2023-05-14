@@ -9,12 +9,15 @@ const Leads = () => {
 
 	const [leads, setleads] = useState([]);
 	const [showModal, setShowModal] = React.useState(false);
+  const [paginationUrl, setPaginationUrl] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
-		getLeads().then((data) => {
+		getLeads(setLoading, paginationUrl).then((data) => {
 			setleads(data);
 		});
-	}, []);
+	}, [paginationUrl]);
 
 
 
@@ -29,26 +32,10 @@ const Leads = () => {
                 <input
                   className="outline-none border-none w-full"
                   type="text"
-                  placeholder="Search by ID"
-                //   onChange={({ target }) => setInputValue(target.value)}
+                  placeholder="Search by Email"
+                  onChange={({ target }) => setInputValue(target.value)}
                 />
               </div>
-              <select
-                // value={category}
-                // onChange={(e) => setcategory(e.target.value)}
-                className="w-[200px] outline-none bg-transparent p-2 border rounded-lg shadow-sm capitalize"
-              >
-                {/* {TripStatusoptions?.map((item) => ( */}
-                  <option
-                    // key={item.label}
-                    // value={item.value}
-                    className="border-none capitalize"
-                  >Select Items
-    
-                    {/* {item.label} */}
-                  </option>
-                {/* ))} */}
-              </select>
             </div>
     
     
@@ -94,23 +81,23 @@ const Leads = () => {
       </table>
           <div className="flex justify-center items-center gap-x-4 mt-4">
               <button
-            //   disabled={categoryTripsQuery?.data?.data?.previous === null && true}
-                // onClick={() =>
-                //   setPaginationUrl(
-                //     "?" + categoryTripsQuery?.data?.data?.previous?.split("?")[1]
-                //   )
-                // }
+              disabled={leads?.previous === null && true}
+                onClick={() =>
+                  setPaginationUrl(
+                    "?" + leads?.previous?.split("?")[1]
+                  )
+                }
                 className=" outline-none border border-gray-600 rounded-lg py-1 px-4 "
               >
                 Prev
               </button>
               <button
-                // disabled={categoryTripsQuery?.data?.data?.next === null && true}
-                // onClick={() =>
-                //   setPaginationUrl(
-                //     "?" + categoryTripsQuery?.data?.data?.next?.split("?")[1]
-                //   )
-                // }
+                disabled={leads?.next === null && true}
+                onClick={() =>
+                  setPaginationUrl(
+                    "?" + leads?.next?.split("?")[1]
+                  )
+                }
                 className={`outline-none border border-gray-600 rounded-lg py-1 px-4`}
               >
                 Next

@@ -12,13 +12,17 @@ const Networkers = () => {
     const [showModal, setShowModal] = React.useState(false);
     const [error, setError] = useState("");
     const [selectedNetworker, setSelectedNetworker] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [paginationUrl, setPaginationUrl] = useState("");
+    const [category, setcategory] = useState("all");
+    const [inputValue, setInputValue] = useState("");
 
-
+    
     useEffect(() => {
-        getAllWorkers().then((data) => {
+        getAllWorkers(setLoading,category, paginationUrl).then((data) => {
             setnetworkers(data);
         });
-    }, []);
+    }, [paginationUrl, category]);
 
     const networkerHandler = (item) => {
       setSelectedNetworker(item);
@@ -32,32 +36,16 @@ const Networkers = () => {
         <section className="w-[95%] h-[80vh]">
         
     
-        <div className="    flex items-center justify-between p-4 xl:space-y-0 space-y-4">
+        <div className="flex items-center justify-between p-4 xl:space-y-0 space-y-4">
               <h1 className=" capitalize font-bold"> All Networkers </h1>
               <div className=" w-[300px] border py-2 px-4 border-gray-500 rounded-lg">
                 <input
                   className="outline-none border-none w-full"
                   type="text"
-                  placeholder="Search by ID"
-                //   onChange={({ target }) => setInputValue(target.value)}
+                  placeholder="Search by email"
+                  onChange={({ target }) => setInputValue(target.value)}
                 />
               </div>
-              <select
-                // value={category}
-                // onChange={(e) => setcategory(e.target.value)}
-                className="w-[200px] outline-none bg-transparent p-2 border rounded-lg shadow-sm capitalize"
-              >
-                {/* {TripStatusoptions?.map((item) => ( */}
-                  <option
-                    // key={item.label}
-                    // value={item.value}
-                    className="border-none capitalize"
-                  >Select Items
-    
-                    {/* {item.label} */}
-                  </option>
-                {/* ))} */}
-              </select>
             </div>
     
     
@@ -73,6 +61,7 @@ const Networkers = () => {
             <TableHead className={""}>Action</TableHead>
           </tr>
         </thead>
+        
         <tbody>
           {networkers?.results?.slice(0, 10).map((item) => (
             <tr
@@ -104,23 +93,23 @@ const Networkers = () => {
       </table>
           <div className="flex justify-center items-center gap-x-4 mt-4">
               <button
-            //   disabled={categoryTripsQuery?.data?.data?.previous === null && true}
-                // onClick={() =>
-                //   setPaginationUrl(
-                //     "?" + categoryTripsQuery?.data?.data?.previous?.split("?")[1]
-                //   )
-                // }
+              disabled={networkers?.previous === null && true}
+                onClick={() =>
+                  setPaginationUrl(
+                    "?" + networkers?.previous?.split("?")[1]
+                  )
+                }
                 className=" outline-none border border-gray-600 rounded-lg py-1 px-4 "
               >
                 Prev
               </button>
               <button
-                // disabled={categoryTripsQuery?.data?.data?.next === null && true}
-                // onClick={() =>
-                //   setPaginationUrl(
-                //     "?" + categoryTripsQuery?.data?.data?.next?.split("?")[1]
-                //   )
-                // }
+                disabled={networkers?.next === null && true}
+                onClick={() =>
+                  setPaginationUrl(
+                    "?" + networkers?.next?.split("?")[1]
+                  )
+                }
                 className={`outline-none border border-gray-600 rounded-lg py-1 px-4`}
               >
                 Next

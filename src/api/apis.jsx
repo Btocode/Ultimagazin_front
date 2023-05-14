@@ -1,18 +1,21 @@
 import AxiosApi from "./AxiosApi";
 
-const getLeads = async () => {
+const getLeads = async (setLoading, paginationUrl) => {
+  setLoading(true);
   const options = {
     method: "GET",
-    url: "/api/v1/lead/all/",
+    url: "/api/v1/lead/all/" + paginationUrl,
     headers: { "Content-Type": "application/json" },
   };
 
   try {
     const response = await AxiosApi.request(options);
     if (response.data) {
+      setLoading(false);
       return response.data;
     }
   } catch (error) {
+    setLoading(false);
     console.log(error);
   }
 
@@ -36,18 +39,21 @@ const getLeadsByReflink = async (id) => {
 
   return null;
 };
-const getreflinks = async () => {
+const getreflinks = async (setLoading, paginationUrl) => {
+  setLoading(true);
   const options = {
     method: "GET",
-    url: "/api/v1/reflink/all/",
+    url: "/api/v1/reflink/all/" + paginationUrl,
     headers: { "Content-Type": "application/json" },
   };
   try {
     const response = await AxiosApi.request(options);
     if (response.data) {
+      setLoading(false);
       return response.data;
     }
   } catch (error) {
+    setLoading(false);  
     console.log(error);
   }
 };
@@ -88,18 +94,21 @@ const removeRefLink = async (id) => {
   }
 };
 
-const getAllWorkers = async () => {
+const getAllWorkers = async (setLoading,category, paginationUrl) => {
+  setLoading(true);
   const options = {
     method: "GET",
-    url: "/user/api/v1/networker/all/",
+    url: "/user/api/v1/networker/"+ category + "/" + paginationUrl,
     headers: { "Content-Type": "application/json" },
   };
   try {
     const response = await AxiosApi.request(options);
     if (response.data) {
+      setLoading(false);
       return response.data;
     }
   } catch (error) {
+    setLoading(false);
     console.log(error);
   }
 };
