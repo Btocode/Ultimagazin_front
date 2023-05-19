@@ -16,7 +16,7 @@ const BaseHeader = ({
   const full_name = localStorage.getItem("full_name");
   return (
     <div className={` w-full bg-[#111A3A] rounded`}>
-      <div className="flex items-center justify-between py-2 shadow md:hidden sm:hidden">
+      <div className="flex items-center justify-between py-2 shadow">
         {/* Toggle button */}
         <button
           onClick={() => setIsToggleCollapse((prev) => !prev)}
@@ -27,7 +27,7 @@ const BaseHeader = ({
         </button>
 
         {/* Heading */}
-        <h1 className="text-lg px-4 capitalize font-bold text-gray-300">
+        <h1 className="text-lg px-4 capitalize font-bold text-gray-300 md:hidden sm:hidden">
           {location.pathname === "/"
             ? "dashboard"
             : location.pathname.replace("/", "")}

@@ -46,7 +46,7 @@ const Reflinks = () => {
     <section className="w-[95%] h-[80vh]">
     
 
-    <div className="    flex items-center justify-between p-4 xl:space-y-0 space-y-4">
+    <div className="    flex items-center justify-between p-4 xl:space-y-0 space-y-4 sm:flex-col md:flex-col">
           <h1 className=" capitalize font-bold"> All Reflinks </h1>
           <div className=" w-[300px] border py-2 px-4 border-gray-500 rounded-lg">
             <input
