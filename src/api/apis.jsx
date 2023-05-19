@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import AxiosApi from "./AxiosApi";
 
 const getLeads = async (setLoading, paginationUrl) => {
@@ -10,17 +11,19 @@ const getLeads = async (setLoading, paginationUrl) => {
 
   try {
     const response = await AxiosApi.request(options);
+    setLoading(false);
     if (response.data) {
-      setLoading(false);
       return response.data;
     }
   } catch (error) {
     setLoading(false);
+    return error;
   }
 
   return null;
 };
-const getLeadsByReflink = async (id) => {
+const getLeadsByReflink = async (id, setLoading1) => {
+  setLoading1(true);
   const options = {
     method: "GET",
     url: `/api/v1/lead/all/${id}/`,
@@ -29,16 +32,19 @@ const getLeadsByReflink = async (id) => {
 
   try {
     const response = await AxiosApi.request(options);
+    setLoading1(false);
     if (response.data) {
       return response.data;
     }
   } catch (error) {
-    
+    setLoading1(false);
+    return error;
+
   }
 
   return null;
 };
-const getreflinks = async (setLoading, paginationUrl) => {
+const getreflinks = async (paginationUrl, setLoading) => {
   setLoading(true);
   const options = {
     method: "GET",
@@ -47,17 +53,18 @@ const getreflinks = async (setLoading, paginationUrl) => {
   };
   try {
     const response = await AxiosApi.request(options);
+    setLoading(false);
     if (response.data) {
-      setLoading(false);
       return response.data;
     }
   } catch (error) {
-    setLoading(false);  
-    console.log(error);
+    setLoading(false);
+    return error;
   }
 };
 
-const addReflink = async (reflink, networker) => {
+const addReflink = async (reflink, networker, setLoading) => {
+  setLoading(true);
   const options = {
     method: "POST",
     url: "/api/v1/reflink/create/",
@@ -70,14 +77,18 @@ const addReflink = async (reflink, networker) => {
   try {
     const response = await AxiosApi.request(options);
     if (response.data) {
+      setLoading(false);
       return response.data;
     }
   } catch (error) {
-    console.log(error);
+    setLoading(false);
+    alert("this reflink already exists !");
+    return error;
   }
 };
 
-const removeRefLink = async (id) => {
+const removeRefLink = async (id, removeLoading) => {
+  removeLoading(true);
   const options = {
     method: "DELETE",
     url: `/api/v1/reflink/delete/${id}/`,
@@ -85,15 +96,17 @@ const removeRefLink = async (id) => {
   };
   try {
     const response = await AxiosApi.request(options);
+    removeLoading(false);
     if (response.status === 204) {
       return "204";
     }
   } catch (error) {
-    console.log(error);
+    removeLoading(false);
+    return error;
   }
 };
 
-const getAllWorkers = async (setLoading,category, paginationUrl) => {
+const getAllWorkers = async (category, paginationUrl, setLoading) => {
   setLoading(true);
   const options = {
     method: "GET",
@@ -108,11 +121,12 @@ const getAllWorkers = async (setLoading,category, paginationUrl) => {
     }
   } catch (error) {
     setLoading(false);
-    console.log(error);
+    return error;
   }
 };
 
-const removeNetworker = async (id) => {
+const removeNetworker = async (id, setDeleteLoader) => {
+  setDeleteLoader(true);
   const options = {
     method: "DELETE",
     url: `/api/v1/networker/delete/${id}/`,
@@ -120,15 +134,17 @@ const removeNetworker = async (id) => {
   };
   try {
     const response = await AxiosApi.request(options);
+    setDeleteLoader(false);
     if (response.status === 204) {
       return "204";
     }
   } catch (error) {
-    console.log(error);
+    setDeleteLoader(false);
+    return error
   }
 };
 
-const deleteLead = async (id) => {
+const deleteLead = async (id, setDeleteModal) => {
   const options = {
     method: "DELETE",
     url: `/api/v1/lead/delete/${id}/`,
@@ -140,11 +156,12 @@ const deleteLead = async (id) => {
       return "204";
     }
   } catch (error) {
-    console.log(error);
+    return error
   }
 };
 
-const activateNetworker = async (id) => {
+const activateNetworker = async (id, setModalLoader) => {
+  setModalLoader(true);
   const options = {
     method: "PATCH",
     url: `/api/v1/networker/activate/${id}/`,
@@ -152,11 +169,13 @@ const activateNetworker = async (id) => {
   };
   try {
     const response = await AxiosApi.request(options);
+    setModalLoader(false);
     if (response.status === 200) {
       return "200";
     }
   } catch (error) {
-    console.log(error);
+    setModalLoader(false);
+    return error
   }
 };
 

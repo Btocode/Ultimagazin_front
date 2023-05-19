@@ -5,27 +5,45 @@ import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
 import TableData from "../UI/TableData";
 import TableHead from "../UI/TableHead";
 import { getLeads, getreflinks } from "../api/apis";
+import { useQuery } from "@tanstack/react-query";
 
 const Dashboard = () => {
   const [reflinks, setreflinks] = useState([]);
   const [leads, setleads] = useState([]);
   const [showModal, setShowModal] = React.useState(false);
-  const [error, setError] = useState("");
-  const [loading1, setLoading1] = useState(false);
-  const [loading2, setLoading2] = useState(false);
   const [modalInfo, setModalInfo] = useState({});
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState("");
   const [paginationUrl, setPaginationUrl] = useState("");
+  const [loading, setLoading] = useState(false);
+
+
+  const { data, isLoading, isError, error } = useQuery(
+    
+    ["reflinks"],
+    () => getreflinks(paginationUrl, setLoading),
+    {
+      refetchOnWindowFocus: true,
+    }
+  );
+
+  const { data: leadsData, isLoading: leadsLoading, error: leadsError } = useQuery(
+
+    ["leads"],
+    () => getLeads(setLoading ,paginationUrl),
+  );
 
   useEffect(() => {
-    getreflinks(setLoading1, paginationUrl).then((data) => {
+    if (data) {
       setreflinks(data);
-    });
-    getLeads(setLoading2, paginationUrl).then((data) => {
-      setleads(data);
-    });
-  }, []);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (leadsData) {
+      setleads(leadsData);
+    }
+  }, [leadsData]);
 
   const showModalHandler = (item) => {
     setModalInfo(item);
@@ -42,7 +60,7 @@ const Dashboard = () => {
       {/*  Dashboard Heading section  */}
 
       {/* Reflinks Section */}
-      {loading1 ? (
+      {isLoading ? (
         <section className="w-full 2xl:w-1/2 h-[60vh] p-4 m-4 overflow-auto">
         <Skeleton />
         </section>
@@ -105,7 +123,7 @@ const Dashboard = () => {
       }
 
       {/* Leads Section */}
-      {loading2 ? (
+      {leadsLoading ? (
         <section className="w-full 2xl:w-1/2 h-[60vh] p-4 m-4 overflow-auto">
         <Skeleton />
         </section>
@@ -175,12 +193,18 @@ const Dashboard = () => {
         <ReflinkInfoModal
           setShowModal={setShowModal}
           modalInfo={modalInfo}
+          paginationUrl={paginationUrl}
+          setreflinks={setreflinks}
+          setLoading={setLoading}
         />
       )}
       {deleteModal && (
         <LeadDeleteModal
           setDeleteModal={setDeleteModal}
           id={deleteId}
+          paginationUrl={paginationUrl}
+          setleads={setleads}
+          setLoading={setLoading}
         />
       )}
     </main>

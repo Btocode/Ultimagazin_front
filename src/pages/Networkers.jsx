@@ -19,7 +19,7 @@ const Networkers = () => {
 
     
     useEffect(() => {
-        getAllWorkers(setLoading,category, paginationUrl).then((data) => {
+        getAllWorkers(category, paginationUrl, setLoading).then((data) => {
             setnetworkers(data);
         });
     }, [paginationUrl, category]);
@@ -129,7 +129,7 @@ const Networkers = () => {
 
         {
             showModal && (
-              <NetworkerModal info = {selectedNetworker} setShowModal = {setShowModal} setnetworkers = {setnetworkers} />
+              <NetworkerModal info = {selectedNetworker} setShowModal = {setShowModal} setnetworkers = {setnetworkers} category = {category} paginationUrl={paginationUrl} setLoading={setLoading}  />
             )
         }
         </main>

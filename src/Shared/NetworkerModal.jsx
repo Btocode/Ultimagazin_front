@@ -3,17 +3,19 @@ import React from 'react'
 import { removeNetworker, getAllWorkers, activateNetworker } from "../api/apis";
 
 
-const NetworkerModal = ({info, setShowModal, setnetworkers}) => {
+const NetworkerModal = ({info, setShowModal, setnetworkers, category, paginationUrl, setLoading}) => {
+  const [modalLoader, setModalLoader] = React.useState(false);
+  const [deleteLoader, setDeleteLoader] = React.useState(false);
 
     const activateNetworkerHandler = () => {
         // Show a confirmation message before deleting a networker
         const confirm = window.confirm("Are you sure you want to activate this networker?");
         if (confirm) {
-            activateNetworker(info?.id).then((data) => {
+            activateNetworker(info?.id, setModalLoader).then((data) => {
+              setShowModal(false);
                 if (data === "200") {
-                    getAllWorkers().then((data) => {
+                    getAllWorkers(category, paginationUrl, setLoading).then((data) => {
                         setnetworkers(data);
-                        setShowModal(false);
                     });
                 }
 
@@ -27,12 +29,12 @@ const NetworkerModal = ({info, setShowModal, setnetworkers}) => {
         // Show a confirmation message before deleting a networker
         const confirm = window.confirm("Are you sure you want to delete this networker?");
         if (confirm) {
-            removeNetworker(info?.id).then((data) => {
+            removeNetworker(info?.id, setDeleteLoader).then((data) => {
+              setShowModal(false);
                 if (data === "204") {
-                    getAllWorkers().then((data) => {
-                        setnetworkers(data);
-                        setShowModal(false);
-                    });
+                  getAllWorkers(category, paginationUrl, setLoading).then((data) => {
+                    setnetworkers(data);
+                });
                 }
 
             });
@@ -44,6 +46,9 @@ const NetworkerModal = ({info, setShowModal, setnetworkers}) => {
       <div
         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
       >
+       <div className="fixed inset-0 transition-opacity">
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           <div className="border-0 rounded-md shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none px-6">
             {/* Remove button */}
@@ -69,7 +74,7 @@ const NetworkerModal = ({info, setShowModal, setnetworkers}) => {
 
             {/* Header */}
             <div className="flex items-start justify-center p-5 border-b border-solid border-gray-300 rounded-t">
-              <h3 className="text-xl font-semibold tracking-wider">REFLINK INFO</h3>
+              <h3 className="text-xl font-semibold tracking-wider">NETWORKERS INFO</h3>
             </div>
 
             {/* Body */}
@@ -96,7 +101,9 @@ const NetworkerModal = ({info, setShowModal, setnetworkers}) => {
                 variant="contained"
                 onClick={() => activateNetworkerHandler()}
               >
-                Activate
+                {
+                  modalLoader ? "Activating..." : "Activate"
+                }
               </Button>
               }
               <span 
@@ -110,7 +117,9 @@ const NetworkerModal = ({info, setShowModal, setnetworkers}) => {
 
                 onClick={() => handleRemove()}
               >
-                Remove
+                {
+                  deleteLoader ? "Removing..." : "Remove"
+                }
               </Button>
             </div>
           </div>

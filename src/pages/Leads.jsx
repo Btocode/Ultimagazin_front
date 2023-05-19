@@ -4,6 +4,7 @@ import TableData from "../UI/TableData";
 import { getLeads } from "../api/apis";
 import { useState, useEffect } from "react";
 import { Button, Skeleton } from "@mui/material";
+import LeadDeleteModal from "../Shared/LeadDeleteModal";
 
 const Leads = () => {
 
@@ -12,6 +13,7 @@ const Leads = () => {
   const [paginationUrl, setPaginationUrl] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [id, setId] = useState("");
 
 	useEffect(() => {
 		getLeads(setLoading, paginationUrl).then((data) => {
@@ -73,6 +75,12 @@ const Leads = () => {
               <TableData className="text-left px-2 py-3 ">
                 <Button 
                 variant="outlined"
+                onClick={() => {
+                  setShowModal(true);
+                  setId(item.id);
+                }
+                }
+
                 >Delete</Button>
               </TableData>
             </tr>
@@ -112,6 +120,17 @@ const Leads = () => {
             </div>
         </section>
         )
+        }
+        {
+          showModal && (
+            <LeadDeleteModal
+              setDeleteModal={setShowModal}
+              id = {id}
+              paginationUrl={paginationUrl}
+              setleads={setleads}
+              setLoading={setLoading}
+              />
+            )
         }
         </main>
       );

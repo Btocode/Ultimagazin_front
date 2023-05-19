@@ -7,33 +7,36 @@ import React from "react";
 import CreateReflinkModal from "../Shared/CreateReflinkModal";
 import ReflinkInfoModal from "../Shared/ReflinkInfoModal";
 import { Button, Skeleton } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 
 const Reflinks = () => {
 
     const [reflinks, setreflinks] = useState([]);
 
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [category, setcategory] = useState("");
     const [showCreateModal, setCreateModal] = React.useState(false);
     const [showModal, setShowModal] = React.useState(false);
     const [modalInfo, setModalInfo] = useState({});
     const [paginationUrl ,setPaginationUrl] = useState("");
+    const [loading, setLoading] = useState(false);
 
 
     useEffect(() => {
-      getreflinks(setLoading, paginationUrl).then((data) => {
-        setreflinks(data);
-      });
-    }, [paginationUrl]);
+      getreflinks(paginationUrl, setLoading).then((res) => {
+        setreflinks(res);
+      }
+      );
+    }, [ paginationUrl]);
+
+
     const showModalHandler = (item) => {
       setModalInfo(item);
       setShowModal(true);
     };
   return (
     <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
-    {loading ? (
+    { loading ? (
         <section className="w-[95%] h-[80vh]">
         <Skeleton />
         </section>
@@ -132,18 +135,24 @@ const Reflinks = () => {
     </section>
         )}
 
-      {showCreateModal && <CreateReflinkModal setCreateModal={setCreateModal} />}
+      {showCreateModal && <CreateReflinkModal 
+      setCreateModal={setCreateModal}
+      setreflinks={setreflinks}
+      paginationUrl={paginationUrl}
+      setLoading={setLoading}
+       />}
+
+      {/* Reflink Info Modal */}
       {showModal && (
         <ReflinkInfoModal
           setShowModal={setShowModal}
           modalInfo={modalInfo}
+          paginationUrl={paginationUrl}
+          setreflinks={setreflinks}
+          setLoading={setLoading}
         />
       )}
-      {/* {
-        loading && (
-          <Skeleton variant="rectangular" width="100%" height="100%" />
-        )
-      } */}
+      
     </main>
   );
 };
