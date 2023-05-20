@@ -59,7 +59,6 @@ const tokenService = new TokenService();
 
 // Replace this with your own backend base URL
 AxiosApi.defaults.baseURL = BASE_URL;
-console.log(BASE_URL);
 
 AxiosApi.defaults.headers = {
   "Content-Type": "application/json",
@@ -91,10 +90,8 @@ AxiosApi.interceptors.request.use(
       }
     }
 
-    if (token) {
       // Configure this as per your backend requirements
       config.headers["Authorization"] = `Bearer ${token}`;
-    }
     return config;
   },
 
