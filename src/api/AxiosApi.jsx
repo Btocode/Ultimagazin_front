@@ -1,7 +1,7 @@
 import { default as myAxios } from "axios";
-import { BASE_URL } from "../../config/config";
 import dayjs from "dayjs";
 import jwt_decode from "jwt-decode";
+import { BASE_URL } from "../../config/config";
 
 class TokenService {
   constructor() {
@@ -11,7 +11,7 @@ class TokenService {
 
   getAccessToken() {
     return this.accessToken;
-  } 
+  }
 
   setAccessToken(accessToken) {
     localStorage.setItem("access", accessToken);
@@ -27,7 +27,7 @@ class TokenService {
 
   async rotateRefreshToken() {
     console.log("Rotating refresh token");
-    const endpoint = BASE_URL +  "/user/api/token/refresh/"; // assuming this is the correct endpoint
+    const endpoint = BASE_URL + "/user/api/token/refresh/"; // assuming this is the correct endpoint
     const data = {
       refresh: this.refreshToken,
     };
@@ -35,10 +35,9 @@ class TokenService {
     try {
       const response = await myAxios.post(endpoint, data);
       if (response.status !== 200) {
-        this.accessToken = null;
-        this.refreshToken = null;
-        localStorage.removeItem("authenticated")
-        // window.location.reload();
+        console.log("Failed to refresh token", response);
+        localStorage.clear();
+        window.location.replace("/login");
         throw new Error("Failed to refresh token");
       }
       this.accessToken = response?.data?.access;
@@ -47,11 +46,8 @@ class TokenService {
       this.setRefreshToken(this.refreshToken);
       return this.accessToken;
     } catch (error) {
-      this.setAccessToken(null);
-      this.setRefreshToken(null);
-      localStorage.removeItem("authenticated");
-      // alert("Session expired. Please login again.")
-      // window.location.reload();
+      localStorage.clear();
+      window.location.replace("/login");
       console.log("Failed to refresh access token:", error);
       throw error;
     }
@@ -102,7 +98,6 @@ AxiosApi.interceptors.request.use(
     return config;
   },
 
-
   (error) => {
     console.log("Error Occured ");
     console.log(error?.response);
@@ -130,7 +125,5 @@ AxiosApi.interceptors.request.use(
 //     return Promise.reject(error);
 //   }
 // );
-
-
 
 export default AxiosApi;
