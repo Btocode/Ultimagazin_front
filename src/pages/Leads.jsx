@@ -5,27 +5,28 @@ import { getLeads } from "../api/apis";
 import { useState, useEffect } from "react";
 import { Button, Skeleton } from "@mui/material";
 import LeadDeleteModal from "../Shared/LeadDeleteModal";
+import { useQuery } from "@tanstack/react-query";
 
 const Leads = () => {
 
 	const [leads, setleads] = useState([]);
 	const [showModal, setShowModal] = React.useState(false);
   const [paginationUrl, setPaginationUrl] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [id, setId] = useState("");
 
-	useEffect(() => {
-		getLeads(setLoading, paginationUrl).then((data) => {
-			setleads(data);
-		});
-	}, [paginationUrl]);
+  const getLeadsQuery = useQuery({
+    queryKey: ["getLeads", paginationUrl],
+    queryFn: () => getLeads(paginationUrl),
+    refetchOnWindowFocus: false,
+    retry: 1,
+  })
+
 
 
 
     return (
         <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
-        {loading ? (
+        {getLeadsQuery.isLoading ? (
         <section className="w-[95%] h-[80vh]">
         <Skeleton />
         </section>
@@ -62,7 +63,7 @@ const Leads = () => {
           </tr>
         </thead>
         <tbody>
-          {leads?.results?.slice(0, 10).map((item) => (
+          {getLeadsQuery?.data?.results?.slice(0, 10).map((item) => (
             <tr
               key={item.id}
               className="hover:bg-gray-200 border-b text-sm capitalize"
@@ -71,7 +72,7 @@ const Leads = () => {
               <TableData className="text-left px-2 py-3 ">{item.name}</TableData>
               <TableData className="text-left px-2 py-3 lowercase">{item.email}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.reflink}</TableData>
-              <TableData className="text-left px-2 py-3 ">{item.created_at}</TableData>
+              <TableData className="text-left px-2 py-3 ">{item.created_at.split("T")[0]}</TableData>
               <TableData className="text-left px-2 py-3 ">
                 <Button 
                 variant="outlined"
@@ -85,7 +86,7 @@ const Leads = () => {
               </TableData>
             </tr>
           ))} 
-          {leads?.results?.length === 0 && (
+          {getLeadsQuery?.data?.results?.length === 0 && (
               <tr>
                 <td colSpan="5" className="text-left py-4 ">
                   No Data Found
@@ -96,10 +97,10 @@ const Leads = () => {
       </table>
           <div className="flex justify-center items-center gap-x-4 mt-4">
               <button
-              disabled={leads?.previous === null && true}
+              disabled={getLeadsQuery?.data?.previous === null && true}
                 onClick={() =>
                   setPaginationUrl(
-                    "?" + leads?.previous?.split("?")[1]
+                    "?" + getLeadsQuery?.data?.previous?.split("?")[1]
                   )
                 }
                 className=" outline-none border border-gray-600 rounded-lg py-1 px-4 "
@@ -107,10 +108,10 @@ const Leads = () => {
                 Prev
               </button>
               <button
-                disabled={leads?.next === null && true}
+                disabled={getLeadsQuery?.data?.next === null && true}
                 onClick={() =>
                   setPaginationUrl(
-                    "?" + leads?.next?.split("?")[1]
+                    "?" + getLeadsQuery?.data?.next?.split("?")[1]
                   )
                 }
                 className={`outline-none border border-gray-600 rounded-lg py-1 px-4`}
@@ -126,9 +127,6 @@ const Leads = () => {
             <LeadDeleteModal
               setDeleteModal={setShowModal}
               id = {id}
-              paginationUrl={paginationUrl}
-              setleads={setleads}
-              setLoading={setLoading}
               />
             )
         }

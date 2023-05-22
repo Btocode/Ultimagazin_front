@@ -1,30 +1,40 @@
 import { Skeleton } from "@mui/material";
 import React, { useEffect } from "react";
 import { getLeadsByReflink, getreflinks, removeRefLink } from "../api/apis";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
 
 const ReflinkInfoModal = ({
   setShowModal,
   modalInfo,
-  paginationUrl,
-  setreflinks,
-  setLoading,
 }) => {
-  const [loading1, setLoading1] = React.useState(false);
-  const [removeLoading, setRemoveLoading] = React.useState(false);
-  const [leads, setleads] = React.useState([]);
-  useEffect(() => {
-    getLeadsByReflink(modalInfo.id, setLoading1).then((data) => {
-      setleads(data);
-    });
-  }, []);
+  const queryClient = useQueryClient();
+
+
+  const getLeadsByReflinkQuery = useQuery(
+    ["leads", modalInfo.id],
+    () => getLeadsByReflink(modalInfo.id),
+    {
+      refetchOnWindowFocus: false,
+      retry: 1,
+
+    }
+  );
+
+  const deleteRefLink = useMutation(
+    () => removeRefLink(modalInfo.id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("reflinks");
+        setShowModal(false);
+      },
+    }
+  );
+
+
 
   const handleDelete = () => {
-    removeRefLink(modalInfo.id, setRemoveLoading).then(() => {
-      setShowModal(false);
-      getreflinks(paginationUrl, setLoading).then((data) => {
-        setreflinks(data);
-      });
-    });
+    deleteRefLink.mutate();
   };
   return (
     <>
@@ -83,12 +93,12 @@ const ReflinkInfoModal = ({
                   Total Leads: {modalInfo?.leads}
                 </p>
                 <hr />
-                {loading1 ? (
+                {getLeadsByReflinkQuery.isLoading ? (
                   <Skeleton />
                 ) : (
                   <ul className="list-disc list-inside max-h-[100px] overflow-auto">
-                    {leads &&
-                      leads?.results?.map((lead) => (
+                    {getLeadsByReflinkQuery.isSuccess &&
+                      getLeadsByReflinkQuery?.data?.results?.map((lead) => (
                         <li
                           key={lead.id}
                           className="text-gray-500 text-lg">
@@ -113,7 +123,7 @@ const ReflinkInfoModal = ({
                 className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={handleDelete}>
-                {removeLoading ? "Deleting..." : "Delete"}
+                {deleteRefLink.isLoading ? "Deleting..." : "Delete"}
               </button>
             </div>
           </div>

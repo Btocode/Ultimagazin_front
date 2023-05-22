@@ -30,20 +30,9 @@ const Dashboard = () => {
   const { data: leadsData, isLoading: leadsLoading, error: leadsError } = useQuery(
 
     ["leads"],
-    () => getLeads(setLoading ,paginationUrl),
+    () => getLeads(paginationUrl),
   );
 
-  useEffect(() => {
-    if (data) {
-      setreflinks(data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (leadsData) {
-      setleads(leadsData);
-    }
-  }, [leadsData]);
 
   const showModalHandler = (item) => {
     setModalInfo(item);
@@ -81,7 +70,7 @@ const Dashboard = () => {
           </thead>
 
           <tbody>
-            {reflinks?.results?.slice(0, 6).map((item, index) => (
+            {data?.results?.slice(0, 6).map((item, index) => (
               <tr
                 key={item.id}
                 className="hover:bg-gray-200 border-b text-sm capitalize">
@@ -107,7 +96,7 @@ const Dashboard = () => {
                 </TableData>
               </tr>
             ))}
-            {reflinks?.results?.length === 0 && (
+            {data?.results?.length === 0 && (
               <tr>
                 <td
                   colSpan="5"
@@ -145,7 +134,7 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {leads?.results?.slice(0, 6).map((item) => (
+            {leadsData?.results?.slice(0, 6).map((item) => (
               <tr
                 key={item.id}
                 className="hover:bg-gray-200 border-b text-sm capitalize">
@@ -173,7 +162,7 @@ const Dashboard = () => {
                 </TableData>
               </tr>
             ))}
-            {leads?.results?.length === 0 && (
+            {leadsData?.results?.length === 0 && (
               <tr>
                 <td
                   colSpan="5"
@@ -193,18 +182,12 @@ const Dashboard = () => {
         <ReflinkInfoModal
           setShowModal={setShowModal}
           modalInfo={modalInfo}
-          paginationUrl={paginationUrl}
-          setreflinks={setreflinks}
-          setLoading={setLoading}
         />
       )}
       {deleteModal && (
         <LeadDeleteModal
           setDeleteModal={setDeleteModal}
           id={deleteId}
-          paginationUrl={paginationUrl}
-          setleads={setleads}
-          setLoading={setLoading}
         />
       )}
     </main>

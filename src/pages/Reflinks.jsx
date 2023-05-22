@@ -22,12 +22,13 @@ const Reflinks = () => {
     const [loading, setLoading] = useState(false);
 
 
-    useEffect(() => {
-      getreflinks(paginationUrl, setLoading).then((res) => {
-        setreflinks(res);
-      }
-      );
-    }, [ paginationUrl]);
+    const getAllReflinksQuery = useQuery({
+      queryKey: ["getAllReflinks", paginationUrl],
+      queryFn: () => getreflinks(paginationUrl, setLoading),
+      refetchOnWindowFocus: false,
+      retry: 1,
+    })
+    
 
 
     const showModalHandler = (item) => {
@@ -36,7 +37,7 @@ const Reflinks = () => {
     };
   return (
     <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none w-full flex items-center justify-center">
-    { loading ? (
+    { getAllReflinksQuery.isLoading ? (
         <section className="w-[95%] h-[80vh]">
         <Skeleton />
         </section>
@@ -81,7 +82,7 @@ const Reflinks = () => {
           </tr>
         </thead>
         <tbody>
-          {reflinks?.results?.slice(0, 10).map((item, index) => (
+          {getAllReflinksQuery?.data?.results?.slice(0, 10).map((item, index) => (
             <tr
               key={item.id}
               className="hover:bg-gray-200 border-b text-sm capitalize"
@@ -98,7 +99,7 @@ const Reflinks = () => {
             </tr>
            
           ))}
-          {reflinks?.results?.length === 0 && (
+          {getAllReflinksQuery?.data?.results?.length === 0 && (
               <tr>
                 <td colSpan="5" className="text-center py-4">
                   No Data Found
@@ -109,10 +110,10 @@ const Reflinks = () => {
       </table>
       <div className="flex justify-center items-center gap-x-4 mt-4">
           <button
-          disabled={reflinks?.previous === null && true}
+          disabled={getAllReflinksQuery?.data?.previous === null && true}
             onClick={() =>
               setPaginationUrl(
-                "?" + reflinks?.previous?.split("?")[1]
+                "?" + getAllReflinksQuery?.data?.previous?.split("?")[1]
               )
             }
             className=" outline-none border border-gray-600 rounded-lg py-1 px-4 "
@@ -120,10 +121,10 @@ const Reflinks = () => {
             Prev
           </button>
           <button
-            disabled={reflinks?.next === null && true}
+            disabled={getAllReflinksQuery?.data?.next === null && true}
             onClick={() =>
               setPaginationUrl(
-                "?" + reflinks?.next?.split("?")[1]
+                "?" + getAllReflinksQuery?.data?.next?.split("?")[1]
               )
             }
             className={`outline-none border border-gray-600 rounded-lg py-1 px-4`}
@@ -137,9 +138,6 @@ const Reflinks = () => {
 
       {showCreateModal && <CreateReflinkModal 
       setCreateModal={setCreateModal}
-      setreflinks={setreflinks}
-      paginationUrl={paginationUrl}
-      setLoading={setLoading}
        />}
 
       {/* Reflink Info Modal */}
@@ -147,9 +145,6 @@ const Reflinks = () => {
         <ReflinkInfoModal
           setShowModal={setShowModal}
           modalInfo={modalInfo}
-          paginationUrl={paginationUrl}
-          setreflinks={setreflinks}
-          setLoading={setLoading}
         />
       )}
       

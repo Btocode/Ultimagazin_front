@@ -1,43 +1,48 @@
 import { Button } from "@mui/material";
 import React from 'react'
 import { removeNetworker, getAllWorkers, activateNetworker } from "../api/apis";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
-const NetworkerModal = ({info, setShowModal, setnetworkers, category, paginationUrl, setLoading}) => {
+const NetworkerModal = ({info, setShowModal}) => {
   const [modalLoader, setModalLoader] = React.useState(false);
   const [deleteLoader, setDeleteLoader] = React.useState(false);
+
+  const queryClient = useQueryClient();
+  const activateNetworkerQuery = useMutation(
+    (id) => activateNetworker(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("getAllWorkers");
+        setShowModal(false);
+      },
+    }
+  )
 
     const activateNetworkerHandler = () => {
         // Show a confirmation message before deleting a networker
         const confirm = window.confirm("Are you sure you want to activate this networker?");
         if (confirm) {
-            activateNetworker(info?.id, setModalLoader).then((data) => {
-              setShowModal(false);
-                if (data === "200") {
-                    getAllWorkers(category, paginationUrl, setLoading).then((data) => {
-                        setnetworkers(data);
-                    });
-                }
-
-            });
+            activateNetworkerQuery.mutate(info?.id)
         }
     };
 
+    const removeNetworkerQuery = useMutation(
+        (id) => removeNetworker(id),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries("getAllWorkers");
+                setShowModal(false);
+            },
+        }
+    )
 
 
     const handleRemove = () => {
         // Show a confirmation message before deleting a networker
         const confirm = window.confirm("Are you sure you want to delete this networker?");
         if (confirm) {
-            removeNetworker(info?.id, setDeleteLoader).then((data) => {
-              setShowModal(false);
-                if (data === "204") {
-                  getAllWorkers(category, paginationUrl, setLoading).then((data) => {
-                    setnetworkers(data);
-                });
-                }
-
-            });
+            removeNetworkerQuery.mutate(info?.id)
         }
     };
    
@@ -102,7 +107,7 @@ const NetworkerModal = ({info, setShowModal, setnetworkers, category, pagination
                 onClick={() => activateNetworkerHandler()}
               >
                 {
-                  modalLoader ? "Activating..." : "Activate"
+                  activateNetworkerQuery.isLoading ? "Activating..." : "Activate"
                 }
               </Button>
               }
@@ -118,7 +123,7 @@ const NetworkerModal = ({info, setShowModal, setnetworkers, category, pagination
                 onClick={() => handleRemove()}
               >
                 {
-                  deleteLoader ? "Removing..." : "Remove"
+                  removeNetworkerQuery.isLoading ? "Removing..." : "Remove"
                 }
               </Button>
             </div>

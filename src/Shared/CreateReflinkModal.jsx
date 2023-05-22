@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 import { addReflink, getreflinks } from "../api/apis";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const CreateReflinkModal = ({ setCreateModal, setreflinks, paginationUrl, setLoading }) => {
+const CreateReflinkModal = ({ setCreateModal}) => {
   const [refLink, setRefLink] = useState("");
-  const [error, setError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [loading1 , setLoading1] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleRefLinkChange = (event) => {
     setRefLink(event.target.value);
   };
+
+  const addReflinkQuery = useMutation(
+    () => addReflink(refLink, localStorage.getItem("id")),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("reflinks");
+        setCreateModal(false);
+      },
+      onError: (error) => {
+        setErrorMessage("This Reflink Already exists.");
+      },
+    }
+  );
 
   const handleAddRefLinkClick = () => {
     if (!refLink) {
       setError("Please enter a referral link.");
       return;
     }
-    const networker = localStorage.getItem("id");
-    addReflink(refLink, networker, setLoading1).then((data) => {
-      setCreateModal(false);
-      getreflinks(paginationUrl, setLoading).then((data) => {
-        setreflinks(data);
-      });
-    });
+    addReflinkQuery.mutate()
   };
   return (
     <>
@@ -79,7 +86,7 @@ const CreateReflinkModal = ({ setCreateModal, setreflinks, paginationUrl, setLoa
                   type="button"
                   onClick={handleAddRefLinkClick}
                   className="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-blue-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-blue-500 focus:outline-none focus          :shadow-outline-blue active:bg-blue-600 transition ease-in-out duration-150 sm:text-sm sm:leading-5">
-                  {loading1 ? "Adding..." : "Add Referral Link"}
+                  {addReflinkQuery.isLoading ? "Processing..." : "Add Referral Link"}
                 </button>
               </span>
               <span className="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">

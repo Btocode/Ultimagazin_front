@@ -2,11 +2,8 @@ import React from "react";
 import { deleteLead, getLeads } from "../api/apis";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CircularProgress } from "@mui/material";
 
-const LeadDeleteModal = ({ setDeleteModal, id, paginationUrl,
-  setleads,
-  setLoading }) => {
+const LeadDeleteModal = ({ setDeleteModal, id }) => {
   const queryClient = useQueryClient();
 
 
@@ -18,16 +15,10 @@ const LeadDeleteModal = ({ setDeleteModal, id, paginationUrl,
       onSuccess: () => {
         queryClient.invalidateQueries("leads");
         setDeleteModal(false);
-        getLeads(setLoading, paginationUrl).then((data) => {
-          setleads(data);
-          alert("Lead deleted successfully");
-        }
-        
-        );
       },
       onError: (error) => {
         setDeleteModal(false);
-        toast.error("Something went wrong")
+        console.log(error);
       }
     }
   );
