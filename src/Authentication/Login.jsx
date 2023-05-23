@@ -96,7 +96,7 @@ const Login = ({ next }) => {
     <section className="w-4/6">
       {/* Login Text */}
       <h1 className="text-3xl font-sans font-semibold text-primary top-0 relative mb-4 sm:text-left md:text-left text-center">
-        Welcome to Ultimagzin
+        Welcome to Ultimagazin
       </h1>
       <form onSubmit={handleLogin}>
         <div className=" h-4/5 w-full mt-8 flex flex-col text-primary">

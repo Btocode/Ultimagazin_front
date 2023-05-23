@@ -57,6 +57,7 @@ const Leads = () => {
             <TableHead className={""}>ID</TableHead>
             <TableHead className={""}>Name</TableHead>
             <TableHead className={""}>Email</TableHead>
+            <TableHead className={""}>Phone</TableHead>
             <TableHead className={""}>Reflink</TableHead>
             <TableHead className={""}>Date</TableHead>
             <TableHead className={""}>Action</TableHead>
@@ -71,6 +72,7 @@ const Leads = () => {
               <TableData className="text-left px-2 py-3 ">{item.id}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.name}</TableData>
               <TableData className="text-left px-2 py-3 lowercase">{item.email}</TableData>
+              <TableData className="text-left px-2 py-3">{item.phone ? item?.phone : "N/A"}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.reflink}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.created_at.split("T")[0]}</TableData>
               <TableData className="text-left px-2 py-3 ">

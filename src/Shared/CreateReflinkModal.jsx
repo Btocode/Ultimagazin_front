@@ -59,8 +59,8 @@ const CreateReflinkModal = ({ setCreateModal}) => {
                     Add Referral Link
                   </h3>
                   <div className="mt-2">
-                    <p className="text-sm leading-5 text-gray-500">
-                      Enter your referral link below:
+                    <p className="text-md leading-5 text-gray-500 tracking-wider italic">
+                      {localStorage.getItem("full_name")}
                     </p>
                     <div className="mt-2">
                       <input
