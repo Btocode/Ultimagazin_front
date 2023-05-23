@@ -76,6 +76,7 @@ const Reflinks = () => {
           <tr>
             <TableHead className={""}>ID</TableHead>
             <TableHead className={""}>Link</TableHead>
+            <TableHead className={""}>Owner</TableHead>
             <TableHead className={""}>Leads</TableHead>
             <TableHead className={""}>Created At</TableHead>
             <TableHead className={""}>Action</TableHead>
@@ -89,6 +90,7 @@ const Reflinks = () => {
             >
               <TableData className="text-left px-2 py-3 ">{item?.id}</TableData>
               <TableData className="text-left px-2 py-3 lowercase">{item.url}</TableData>
+              <TableData className="text-left px-2 py-3 capitalize">{item.networker_name}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.leads}</TableData>
               <TableData className="text-left px-2 py-3 ">{item.created_at.split("T")[0]}</TableData>
               <TableData className="text-left px-2 py-3">
